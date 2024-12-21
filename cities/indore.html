@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indore - Heritage & Culture</title>
+    <link rel="stylesheet" href="../styles/city.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+</head>
+<body>
+    <header>
+        <h2>Explore Indore</h2>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="map"></div>
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search for places...">
+            <button onclick="startVirtualTour()">Start Virtual Tour</button>
+        </div>
+        <div id="video-container" style="display: none;">
+            <video id="tour-video" width="80%" controls >
+                <source src="/videos/India-360-v2.mp4"  type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Heritage & Culture Project</p>
+    </footer>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([22.7196, 75.8577], 13); // Coordinates for Indore
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add search control
+        L.Control.geocoder().addTo(map);
+
+        // Add famous food spots and cultural points
+        const locations = [
+            {
+                name: "Sarafa Bazaar - Food Hub",
+                coords: [22.7179, 75.8570],
+                image: "/images/sarafa.jpg",
+                details: "A vibrant night market famous for mouth-watering street food like Poha Jalebi, Bhutte Ka Kees, and Garadu.",
+            },
+            {
+                name: "Chappan Dukan",
+                coords: [22.7286, 75.8896],
+                image: "/images/chappan.jpg",
+                details: "Indore's iconic food street with 56 shops offering lip-smacking snacks, sweets, and chaats.",
+            },
+            {
+                name: "Rajwada Palace",
+                coords: [22.7205, 75.8571],
+                image: "/images/rajwada.jpg",
+                details: "A historical palace showcasing Maratha architecture, often hosting cultural fairs and exhibitions.",
+            },
+            {
+                name: "Khajrana Ganesh Temple",
+                coords: [22.7276, 75.8930],
+                image: "/images/khajarana.jpg",
+                details: "A revered Ganesh temple known for its spiritual ambiance and cultural significance.",
+            },
+        ];
+
+        // Add markers to the map with tooltips and popups
+        locations.forEach(location => {
+            const marker = L.marker(location.coords).addTo(map);
+            marker.bindTooltip(location.name, { permanent: true, direction: "top" }).openTooltip();
+            const popupContent = `
+                <div>
+                    <strong>${location.name}</strong><br>
+                    <img src="${location.image}" alt="${location.name}" style="width:100%; height:auto; margin-top:5px; border-radius:5px;">
+                    <p>${location.details}</p>
+                </div>
+            `;
+            marker.bindPopup(popupContent);
+        });
+
+        // Virtual Tour functionality
+        function startVirtualTour() {
+            // Hide the map and controls
+            document.getElementById("map").style.display = "none";
+            document.querySelector(".controls").style.display = "none";
+
+            // Show the video container
+            document.getElementById("video-container").style.display = "block";
+            document.getElementById("tour-video").play(); // Play the video automatically
+        }
+    </script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        .controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        #search {
+            padding: 5px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        img {
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        footer {
+            position: relative;
+            z-index: 1000;
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+         /*to make it centre aligned*/
+         #video-container {
+            display: none;
+            text-align: center; /* Center align the container */
+        }
+        #tour-video {
+            margin: 0 auto; /* Center align the video */
+        }
+    </style>
+</body>
+</html>
